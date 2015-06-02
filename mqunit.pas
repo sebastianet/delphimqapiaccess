@@ -7,8 +7,13 @@ unit mqunit;
  * MQIC -> Client libraries + mq_basicC
  *
  * Versions :
- *  1.0.a - 20150520 - problemes doble char
- *  1.0.b - 20150602 - open() queue
+ *  1.0.a - 20150520 - problemes doble char, Connect() qmgr
+ *  1.0.b - 20150602 - Open() queue
+ *  1.0.c - 20150602 - Close() queue, Disconnect() qmgr
+ *
+ * github repository : https://github.com/sebastianet/delphimqapiaccess
+ *
+ * Sample code : http://usuaris.tinet.cat/sag/delphi.htm#d_mq
  *
  *}
 
@@ -26,7 +31,7 @@ uses
 const
   szProducte = 'MQ API access from Delphi' ;
   szAutor    = 'sag@tinet.cat' ;
-  szVersio   = 'v 1.0.b, 20150602' ;
+  szVersio   = 'v 1.0.c, 20150602' ;
 
 
 type
@@ -39,21 +44,18 @@ type
     edQUNM: TEdit;
     btnOpen: TButton;
     edObjH: TEdit;
+    btnClose: TButton;
+    btnDisconnect: TButton;
     procedure MyInit(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure btnOpenClick(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
+    procedure btnDisconnectClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
-//    MQCHAR48   = array [0..47]  of AnsiChar ;
-//    PMQCHAR48  = ^MQCHAR48 ;
-//    MQLONG     = Longint;
-//    PMQLONG    = ^MQLONG;
-//    MQHCONN    = MQLONG;
-//    PMQHCONN   = ^MQHCONN;
 
 var
   fMQ         : TfMQ;
@@ -70,9 +72,6 @@ implementation
 
 {$R *.dfm}
 
-// procedure MQCONN ( pQMgrName: PMQCHAR48;
-//                    pHConn: PMQHCONN;
-//                    pCompcode, pReason: PMQLONG ) ; cdecl; external 'MQM.DLL' ;
 
 procedure TfMQ.btnConnectClick(Sender: TObject);
 var
@@ -94,16 +93,11 @@ begin
   SAGdebugMsg ( fMQ.lbEvents, '>>> Lets connect to QMGR [lng '+IntToStr(iLng)+']-('+ sz48QMN +').' ) ;
 
   hConexio := ConnectMQ ( fMQ.lbEvents, sz48QMN ) ;
+
   szhConexio := IntToStr( hConexio ) ;
   edCH.Text := szhConexio ;
 
   SAGdebugMsg ( fMQ.lbEvents, '+-+-+- Resultat handleConexio(' + szhConexio + ').' ) ;
-
-//
-//   MQCONN ( @ szQMN, @ hConexio, @ cc, @ rc ) ;
-//   if ( cc > 0 ) then hConexio := 0 ;
-//   SAGdebugMsg ( fMQ.lbEvents, '+-+-+- Resultat handleConexio(' + szhConexio + ') CC/RC('+IntToStr(cc)+ '/' + IntToStr(rc)+').' ) ;
-//
 
 end; // TfMQ.btnConnectClick
 
@@ -140,6 +134,30 @@ begin
   SAGdebugMsg ( fMQ.lbEvents, '+-+-+- Resultat handleOpen(' + szhOpen + ').' ) ;
 
 end; // TfMQ.btnOpenClick
+
+
+procedure TfMQ.btnCloseClick(Sender: TObject);
+begin
+
+  MQ_Close_Queue ( fMQ.lbEvents, hConexio, hOpen ) ;
+
+  hOpen := 0 ;
+  szhOpen := IntToStr( hOpen ) ;
+  edObjH.Text := szhOpen ;
+
+end; // btnCloseClick
+
+
+procedure TfMQ.btnDisconnectClick(Sender: TObject);
+begin
+
+  DisconnectMQ ( fMQ.lbEvents, hConexio ) ;
+
+  hConexio := 0 ;
+  szhConexio := IntToStr( hConexio ) ;
+  edCH.Text := szhConexio ;
+
+end; // btnDisconnectClick
 
 
 procedure TfMQ.MyInit(Sender: TObject);

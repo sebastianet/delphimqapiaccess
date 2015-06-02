@@ -15,15 +15,15 @@ object fMQ: TfMQ
   PixelsPerInch = 120
   TextHeight = 17
   object btnConnect: TButton
-    Left = 335
-    Top = 15
+    Left = 336
+    Top = 9
     Width = 304
     Height = 35
     Margins.Left = 4
     Margins.Top = 4
     Margins.Right = 4
     Margins.Bottom = 4
-    Caption = 'Connect to Qmgr'
+    Caption = 'Connect to Queue Manager'
     TabOrder = 0
     OnClick = btnConnectClick
   end
@@ -117,6 +117,24 @@ object fMQ: TfMQ
     ParentFont = False
     TabOrder = 6
     Text = 'Object Handle'
+  end
+  object btnClose: TButton
+    Left = 335
+    Top = 176
+    Width = 306
+    Height = 33
+    Caption = 'Close Queue'
+    TabOrder = 7
+    OnClick = btnCloseClick
+  end
+  object btnDisconnect: TButton
+    Left = 336
+    Top = 240
+    Width = 305
+    Height = 33
+    Caption = 'Disconnect from Queue Manager'
+    TabOrder = 8
+    OnClick = btnDisconnectClick
   end
   object Timer1: TTimer
     Left = 920
